@@ -18,7 +18,7 @@ import model.entities.Department;
 import model.services.DepartmentServices;
 
 public class DepartmentListController implements Initializable {
-
+	//Dependencia da classe
 	private DepartmentServices service;
 	
 	@FXML
@@ -31,6 +31,7 @@ public class DepartmentListController implements Initializable {
 	@FXML
 	private Button btNew;
 	
+	//lista para retornar os departamentos
 	private ObservableList<Department> obsList;
 	
 	@FXML
@@ -38,29 +39,37 @@ public class DepartmentListController implements Initializable {
 		System.out.println("onBtNewAction");
 	}
 	
+	//inicializar o comportamento das colunas
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		initializenodes();		
 	}
-
+	//injetando a dependencia
 	public void setDepartmentServiice(DepartmentServices service) {
 		this.service = service;
 	}
 	
 	private void initializenodes() {		
+		//inicializar o comportamento das colunas
 		tablerColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tablerColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		
+		//Pega a referencia para o stage atua,
 		Stage stage = (Stage) Main.getmainScene().getWindow();
+		//Método para acompanhar a janela
 		tableViewDepartments.prefHeightProperty().bind(stage.heightProperty());
 	}
 
+	//acessa o serviço, carrega o departamento e joga la lista obs
 	public void updateTableView() {
+		//verifica se o service é null
 		if(service == null) {
 			throw new IllegalStateException("Service was null");
 		}
+		//recebe o service.findAll
 		List<Department> list = service.findAll();
+		//carrega a lista no obs lista
 		obsList = FXCollections.observableArrayList(list);
+		//carrega o item na tableview
 		tableViewDepartments.setItems(obsList);
 	}
 }
