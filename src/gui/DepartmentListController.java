@@ -43,10 +43,13 @@ public class DepartmentListController implements Initializable {
 	//lista para retornar os departamentos
 	private ObservableList<Department> obsList;
 	
+	// abrindo a tela de novo para cadastrar o novo departamento
 	@FXML
 	public void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		createDialogForm("/gui/departmentForm.fxml", parentStage);
+		//instancia um obj Controler vazio
+		Department obj = new Department();
+		createDialogForm(obj ,"/gui/departmentForm.fxml", parentStage);
 	}
 	
 	//inicializar o comportamento das colunas
@@ -54,7 +57,7 @@ public class DepartmentListController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		initializenodes();		
 	}
-	//injetando a dependencia
+	//injetando a dependencia Com a classe Department service, que contem o método que retorna a lista de departamentos 
 	public void setDepartmentServiice(DepartmentServices service) {
 		this.service = service;
 	}
@@ -83,11 +86,17 @@ public class DepartmentListController implements Initializable {
 		tableViewDepartments.setItems(obsList);
 	}
 	
-	private void createDialogForm(String absoluteName, Stage parentStage) {
+	//Cria o Stage com a caixa de texo para adicionar novo departamento.
+	private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
 		try {
+			//Recebe o nome da View
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
-			
+			//Lê o obj Department Vazio e atualiza
+			DepartmentFormControler controller = loader.getController();
+			controller.setDepartment(obj);
+			controller.updateFormData();
+			// Cria um novo stage
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Entre com as informações do departamento");
 			dialogStage.setScene(new Scene(pane));
@@ -100,6 +109,5 @@ public class DepartmentListController implements Initializable {
 		catch(IOException e) {
 			Alerts.showAlert("IO Exception", "Error Loading view", e.getMessage(), AlertType.ERROR);
 		}
-	}
-	
+	}	
 }
