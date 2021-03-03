@@ -92,9 +92,10 @@ public class DepartmentListController implements Initializable {
 			//Recebe o nome da View
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
-			//Lê o obj Department Vazio e atualiza
+			//Lê  e injeta o obj Department Vazio e atualiza
 			DepartmentFormControler controller = loader.getController();
 			controller.setDepartment(obj);
+			controller.setDepartmentServices(new DepartmentServices());
 			controller.updateFormData();
 			// Cria um novo stage
 			Stage dialogStage = new Stage();

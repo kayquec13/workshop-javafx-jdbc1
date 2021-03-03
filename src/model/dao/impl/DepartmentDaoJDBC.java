@@ -53,8 +53,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		}
 		finally {
 			DB.closeStatement(st);			
-		}
-		
+		}		
 	}
 
 	@Override
@@ -76,8 +75,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		}
 		finally {
 			DB.closeStatement(st);			
-		}
-		
+		}		
 	}
 
 	@Override
@@ -94,8 +92,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		}
 		finally {
 			DB.closeStatement(st);
-		}
-		
+		}		
 	}
 
 	@Override
@@ -115,8 +112,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 				
 				return obj;								
 			}
-			return null;
-			
+			return null;			
 		}
 		catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -161,5 +157,4 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 			DB.closeResultSet(rs);
 		}
 	}
-
 }
