@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -17,55 +20,70 @@ import javafx.scene.control.TextField;
 import model.entities.Department;
 import model.services.DepartmentServices;
 
-public class DepartmentFormControler implements  Initializable {
-	
+public class DepartmentFormControler implements Initializable {
+
 	private Department entity;
 	private DepartmentServices service;
 	
-	
+	private List<DataChangeListener> dataChangelisteners = new ArrayList<>();
+
 	@FXML
 	private TextField txtId;
 	@FXML
-	private TextField txtName;	
+	private TextField txtName;
 	@FXML
 	private Label labelErroName;
 	@FXML
-	private  Button btSave;
+	private Button btSave;
 	@FXML
-	private  Button btCalcel;
-	
+	private Button btCalcel;
+
 	public void setDepartment(Department entity) {
 		this.entity = entity;
 	}
-	
+
 	public void setDepartmentServices(DepartmentServices service) {
 		this.service = service;
 	}
 	
+	//listener, quando um objeto/ metórdo a implementa fica disponivel para receber um evento da classe
+	public void subscribeDepartmentService(DataChangeListener listener) {
+		dataChangelisteners.add(listener);
+	}
+
 	@FXML
 	public void onBtSaveAction(ActionEvent event) {
-		if(entity == null) {
+		if (entity == null) {
 			throw new IllegalStateException("A entidade esta nula ps: onBtSaveAction");
 		}
-		if(service == null){
+		if (service == null) {
 			throw new IllegalStateException("O service esta nula ps: onBtSaveAction");
 		}
-		
+
 		try {
+			//Quando o objeto for salvo com sucesso a aplicação irá chamar o listeners do método setDepartmentService
 			entity = getFormData();
 			service.saveOrUpdate(entity);
+			//Método que notifica o listener
+			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
-		}
-		catch(DbException e){
+		} catch (DbException e) {
 			Alerts.showAlert("Erro ao salvar objeto", null, e.getMessage(), AlertType.ERROR);
 		}
-		
+
 	}
+
+	private void notifyDataChangeListeners() {		
+		for(DataChangeListener listener : dataChangelisteners) {
+			listener.onDataChanged();
+		}
+	}
+
 	private Department getFormData() {
 		Department obj = new Department();
-		
-		//Pega o Id do form e tranforma o id de string para  int
-		obj.setId(Utils.tryparseToInt( txtId.getText()));
+
+		// Pega o Id do form e tranforma o id de string para int
+		obj.setId(Utils.tryparseToInt(txtId.getText()));
 		obj.setName(txtName.getText());
 		return obj;
 	}
@@ -74,22 +92,22 @@ public class DepartmentFormControler implements  Initializable {
 	public void onBtCancelAction(ActionEvent event) {
 		Utils.currentStage(event).close();
 	}
-				
+
 	@Override
-	public void initialize(URL url, ResourceBundle rb) {	
+	public void initialize(URL url, ResourceBundle rb) {
 		initializeNodes();
 	}
-	
+
 	private void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtId, 30);
 	}
-	
+
 	public void updateFormData() {
-		if(entity == null) {
+		if (entity == null) {
 			throw new IllegalStateException("A Entidade departamento é nula");
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
-	}	
+	}
 }
