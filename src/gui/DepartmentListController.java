@@ -9,6 +9,7 @@ import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,78 +30,85 @@ import model.entities.Department;
 import model.services.DepartmentServices;
 
 public class DepartmentListController implements Initializable, DataChangeListener {
-	//Dependencia da classe
+	// Dependencia da classe
 	private DepartmentServices service;
-	
+
 	@FXML
 	private TableView<Department> tableViewDepartments;
-	
+
 	@FXML
 	private TableColumn<Department, Integer> tablerColumnId;
 	@FXML
 	private TableColumn<Department, String> tablerColumnName;
 	@FXML
+	private TableColumn<Department, Department> tableColumnEDIT;
+
+	@FXML
 	private Button btNew;
-	
-	//lista para retornar os departamentos
+
+	// lista para retornar os departamentos
 	private ObservableList<Department> obsList;
-	
+
 	// abrindo a tela de novo para cadastrar o novo departamento
 	@FXML
 	public void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
-		//instancia um obj Controler vazio
+		// instancia um obj Controler vazio
 		Department obj = new Department();
-		createDialogForm(obj ,"/gui/departmentForm.fxml", parentStage);
+		createDialogForm(obj, "/gui/departmentForm.fxml", parentStage);
 	}
-	
-	//inicializar o comportamento das colunas
+
+	// inicializar o comportamento das colunas
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		initializenodes();		
+		initializenodes();
 	}
-	//injetando a dependencia Com a classe Department service, que contem o método que retorna a lista de departamentos 
+
+	// injetando a dependencia Com a classe Department service, que contem o método
+	// que retorna a lista de departamentos
 	public void setDepartmentServiice(DepartmentServices service) {
 		this.service = service;
 	}
-	
-	private void initializenodes() {		
-		//inicializar o comportamento das colunas
+
+	private void initializenodes() {
+		// inicializar o comportamento das colunas
 		tablerColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tablerColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		//Pega a referencia para o stage atua,
+		// Pega a referencia para o stage atua,
 		Stage stage = (Stage) Main.getmainScene().getWindow();
-		//Método para acompanhar a janela
+		// Método para acompanhar a janela
 		tableViewDepartments.prefHeightProperty().bind(stage.heightProperty());
 	}
 
-	//acessa o serviço, carrega o departamento e joga la lista obs
+	// acessa o serviço, carrega o departamento e joga la lista obs
 	public void updateTableView() {
-		//verifica se o service é null
-		if(service == null) {
+		// verifica se o service é null
+		if (service == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		//recebe o service.findAll
+		// recebe o service.findAll
 		List<Department> list = service.findAll();
-		//carrega a lista no obs lista
+		// carrega a lista no obs lista
 		obsList = FXCollections.observableArrayList(list);
-		//carrega o item na tableview
+		// carrega o item na tableview
 		tableViewDepartments.setItems(obsList);
+		
+		initEditButtons();
 	}
-	
-	//Cria o Stage com a caixa de texo para adicionar novo departamento.
+
+	// Cria o Stage com a caixa de texo para adicionar novo departamento.
 	private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
 		try {
-			//Recebe o nome da View
+			// Recebe o nome da View
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
-			//Lê  e injeta o obj Department Vazio e atualiza
+			// Lê e injeta o obj Department Vazio e atualiza
 			DepartmentFormControler controller = loader.getController();
 			controller.setDepartment(obj);
 			controller.setDepartmentServices(new DepartmentServices());
 			controller.subscribeDepartmentService(this);
-			controller.updateFormData();			
-			
+			controller.updateFormData();
+
 			// Cria um novo stage
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Entre com as informações do departamento");
@@ -108,9 +117,8 @@ public class DepartmentListController implements Initializable, DataChangeListen
 			dialogStage.initOwner(parentStage);
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.showAndWait();
-			
-		}
-		catch(IOException e) {
+
+		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error Loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
@@ -118,6 +126,25 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	@Override
 	public void onDataChanged() {
 		updateTableView();
-		
-	}	
+
+	}
+
+	private void initEditButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Department, Department>() {
+			private final Button button = new Button("edit");
+
+			@Override
+			protected void updateItem(Department obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(
+						event -> createDialogForm(obj, "/gui/DepartmentForm.fxml", Utils.currentStage(event)));
+			}
+		});
+	}
 }
