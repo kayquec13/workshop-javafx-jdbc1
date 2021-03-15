@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,17 +35,20 @@ public class SellerListController implements Initializable, DataChangeListener {
 
 	@FXML
 	private TableView<Seller> tableViewSellers;
-
 	@FXML
 	private TableColumn<Seller, Integer> tablerColumnId;
 	@FXML
 	private TableColumn<Seller, String> tablerColumnName;
 	@FXML
+	private TableColumn<Seller, String> tablerColumnEmail;	
+	@FXML
+	private TableColumn<Seller, Date> tablerColumnBirthDate;	
+	@FXML
+	private TableColumn<Seller, Double> tablerColumnBaseSalary;		
+	@FXML
 	private TableColumn<Seller, Seller> tableColumnEDIT;
-
 	@FXML
 	private TableColumn<Seller, Seller> tableColumnREMOVE;
-
 	@FXML
 	private Button btNew;
 
@@ -76,6 +80,14 @@ public class SellerListController implements Initializable, DataChangeListener {
 		// inicializar o comportamento das colunas
 		tablerColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tablerColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tablerColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tablerColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		Utils.formatTableColumnDate(tablerColumnBirthDate, "dd/MM/yyyy");
+		tablerColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+		Utils.formatTableColumnDouble(tablerColumnBaseSalary, 2);
+		
+		
+		
 		// Pega a referencia para o stage atua,
 		Stage stage = (Stage) Main.getmainScene().getWindow();
 		// Método para acompanhar a janela
