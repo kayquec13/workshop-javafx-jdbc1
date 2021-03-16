@@ -33,7 +33,11 @@
             <Label text="Id" />
             <TextField fx:id="txtId" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="labelErroName" prefHeight="17.0" prefWidth="17.0" textFill="#b91d0f" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dpBrithDate" prefHeight="22.0" prefWidth="118.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtBaseSalary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboBoxDepartment" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="labelErroName" prefHeight="17.0" prefWidth="188.0" textFill="#b91d0f" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
                   <Button fx:id="btSave" mnemonicParsing="false" onAction="#onBtSaveAction" text="Salvar" />
@@ -43,14 +47,10 @@
             <Label text="E-mail" GridPane.rowIndex="2" />
             <Label text="Aniversario" GridPane.rowIndex="3" />
             <Label text="Salario" GridPane.rowIndex="4" />
-            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="txtBaseSalary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <DatePicker fx:id="dpBrithDate" prefHeight="22.0" prefWidth="118.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="labelErroEmail" prefHeight="22.0" prefWidth="78.0" textFill="#e41b1b" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label fx:id="labelErroBrithDate" prefHeight="21.0" prefWidth="54.0" textFill="#d00a0a" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label fx:id="labelErroBaseSalary" prefHeight="18.0" prefWidth="61.0" textFill="#901111" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="labelErroEmail" prefHeight="22.0" prefWidth="180.0" textFill="#e41b1b" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label fx:id="labelErroBrithDate" prefHeight="21.0" prefWidth="195.0" textFill="#d00a0a" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label fx:id="labelErroBaseSalary" prefHeight="18.0" prefWidth="206.0" textFill="#901111" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Departamento" GridPane.rowIndex="5" />
-            <ComboBox fx:id="comboBoxDepartment" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </children>
